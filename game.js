@@ -55,36 +55,37 @@ setMap(levels[level])
 setPushables({
   [ player ]: []
 })
+// Player Movement
 
 let isFalling = false;
-let playerObject = getFirst(player); 
+let playerObject = getFirst(player); // get the player object once
 
 onInput("w", () => {
   console.log("Jumping!");
   if (!isFalling) {
-    playerObject = getFirst(player); 
-    playerObject.y -= 2; 
+    playerObject = getFirst(player); // update playerObject
+    playerObject.y -= 2; // move player up
     isFalling = true;
-    fall(playerObject); 
+    fall(playerObject); // pass the player object to the fall function
   }
 })
 
 onInput("a", () => {
-  playerObject = getFirst(player); 
-  playerObject.x -= 1; 
+  playerObject = getFirst(player); // update playerObject
+  playerObject.x -= 1; // move player left
 })
 
 onInput("d", () => {
-  playerObject = getFirst(player); 
-  playerObject.x += 1; 
+  playerObject = getFirst(player); // update playerObject
+  playerObject.x += 1; // move player right
 })
 
-function fall(player) {
+function fall() {
   const intervalId = setInterval(() => {
     const floors = getAll(floor);
     let isCollidingWithFloor = false;
     for (const floor of floors) {
-      if (isColliding(player, floor)) {
+      if (isColliding(playerObject, floor)) {
         isCollidingWithFloor = true;
         break;
       }
@@ -92,12 +93,12 @@ function fall(player) {
     if (isCollidingWithFloor) {
       isFalling = false;
       console.log("Landed on floor!");
-      clearInterval(intervalId); 
+      clearInterval(intervalId); // stop the interval when the player lands
     } else {
-      player.y += 0.5; 
+      playerObject.y += 0.5; // move player down by 0.5 pixels
       isFalling = true;
     }
-  }, 30); 
+  }, 30); // adjust the interval to 30ms for a slower fall
 }
 
 function isColliding(player) {
@@ -110,9 +111,9 @@ function isColliding(player) {
   return false;
 }
 
-
+// Check if the player is falling every frame
 setInterval(() => {
-  playerObject = getFirst(player); 
+  playerObject = getFirst(player); // update playerObject
   if (!isFalling) {
     if (!isColliding(playerObject)) {
       isFalling = true;
